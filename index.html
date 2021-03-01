@@ -1,0 +1,84 @@
+<html>
+<head>
+  <title>threejs - basic</title>
+  <style>
+    body
+    {
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas
+    {
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="myCanvas"></canvas>
+  <script src="three.js"></script>
+  <script>
+    var renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myCanvas'),antialias: true});
+    renderer.setClearColor(0x000000);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    var camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 3000);
+
+    var scene = new THREE.Scene();
+
+    //control
+    var x, y;
+    var canvas = document.getElementById("myCanvas");
+
+    //up & down
+    var temp_camera_move = 0,
+        temp_camera_check;
+    canvas.addEventListener('mousedown', event => {
+      y = event.offsetY;
+      if (y > 266) {
+        temp_camera_move = -0.001;
+        temp_camera_check = "down";
+      } else {
+        temp_camera_move = 0.001;
+        temp_camera_check = "up";
+      }
+    });
+
+
+    //light
+    var light = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(light);
+    var light1 = new THREE.PointLight(0xffffff, 0.5);
+    scene.add(light1);
+
+    //ambient
+    //plane
+    const width = 100;
+    const height = 100;
+    const geometryPlane = new THREE.PlaneBufferGeometry(width, height);
+    var materialPlane = new THREE.MeshLambertMaterial({color: 0xffff00});
+    var meshPlane = new THREE.Mesh(geometryPlane, materialPlane);
+    meshPlane.rotation.x = -1.5;
+    meshPlane.position.set(0, 0, -20);
+    scene.add(meshPlane);
+
+    //animation
+    requestAnimationFrame(render);
+
+    function render()
+    {
+      //control
+      //up & down
+      camera.rotation.x += temp_camera_move;
+      if ((temp_camera_check === "up") && (camera.rotation.x >= 0.25)) temp_camera_move = 0;
+      if ((temp_camera_check === "down") && (camera.rotation.x <= -0.15)) temp_camera_move = 0;
+
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+
+    renderer.render(scene, camera);
+  </script>
+</body>
+</html>

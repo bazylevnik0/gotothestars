@@ -16,6 +16,9 @@
 <body>
   <canvas id="myCanvas"></canvas>
   <script src="three.js"></script>
+  <script src="modules/three.module.js"></script>
+  <script src="modules/OrbitControls.js"></script>
+  <script src="modules/OBJLoader.js"></script>
   <script>
     var renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myCanvas'),antialias: true});
     renderer.setClearColor(0x000000);
@@ -44,7 +47,6 @@
       }
     });
 
-
     //light
     var light = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(light);
@@ -61,6 +63,12 @@
     meshPlane.rotation.x = -1.5;
     meshPlane.position.set(0, 0, -20);
     scene.add(meshPlane);
+
+    //test object
+    const objLoader = new OBJLoader();
+      objLoader.load('objects/untitled.obj', (root) => {
+      scene.add(root);
+    });
 
     //animation
     requestAnimationFrame(render);

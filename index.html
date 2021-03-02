@@ -67,6 +67,8 @@
     //test object
     const objLoader = new OBJLoader();
       objLoader.load('objects/untitled.obj', (obj) => {
+      obj.width = 10;
+      obj.height = 10;
       scene.add(obj);
     });
     

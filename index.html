@@ -65,12 +65,11 @@
     scene.add(meshPlane);
 
     //test object
-    var test_obj;
     const objLoader = new OBJLoader();
-      objLoader.load('objects/untitled.obj', (root) => {
-      test_obj = root;
+      objLoader.load('objects/untitled.obj', (obj) => {
+      scene.add(obj);
     });
-    scene.add(test_obj);
+    
 
     //animation
     requestAnimationFrame(render);

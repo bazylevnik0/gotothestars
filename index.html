@@ -54,9 +54,9 @@
 
     //light
     var light = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(light);
+    scene.children[0] = light;
     var light1 = new THREE.PointLight(0xffffff, 0.5);
-    scene.add(light1);
+    scene.children[1] = light1;
 
     //create THREE objects
     //plane
@@ -67,42 +67,36 @@
     var meshPlane = new THREE.Mesh(geometryPlane, materialPlane);
     meshPlane.rotation.x = -1.5;
     meshPlane.position.set(0, 0, -20);
-    scene.add(meshPlane);
+    scene.children[2] = meshPlane;
 
     //load .obj objects
     const loader = new OBJLoader();
     //round
     //out
     loader.load('objects/obj-round-out.obj', (obj) => {
-      scene.add(obj);
-      //scene.children[3]
+      scene.children[3] = obj;
     });
     //in
     loader.load('objects/obj-round-in.obj', (obj) => {
-      scene.add(obj);
-      //scene.children[4]
+      scene.children[4] = obj;
     });
     //square
     //out
     loader.load('objects/obj-square-out.obj', (obj) => {
-      scene.add(obj);
-      //scene.children[5]
+      scene.children[5] = obj;
     });
     //in
     loader.load('objects/obj-square-in.obj', (obj) => {
-      scene.add(obj);
-      //scene.children[6]
+      scene.children[6] = obj;
     });
     //triangle
     //out
     loader.load('objects/obj-triangle-out.obj', (obj) => {
-      scene.add(obj);
-      //scene.children[7]
+      scene.children[7] = obj;
     });
     //in
     loader.load('objects/obj-triangle-in.obj', (obj) => {
-      scene.add(obj);
-      //scene.children[8]
+      scene.children[8] = obj;
     });
 
     //check .obj objects loading

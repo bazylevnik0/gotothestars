@@ -25,9 +25,6 @@
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    var camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 3000);
-
-    var scene = new THREE.Scene();
 
     //control
     var x, y;
@@ -47,74 +44,105 @@
       }
     });
 
+    //objects
+
+    //camera
+    var camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 3000);
+
+    //scene
+    var scene = new THREE.Scene();
+
     //light
     var light = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(light);
     var light1 = new THREE.PointLight(0xffffff, 0.5);
     scene.add(light1);
 
-    //ambient
+    //create THREE objects
     //plane
-    const width = 100;
-    const height = 100;
-    const geometryPlane = new THREE.PlaneBufferGeometry(width, height);
+    const widthPlane = 100;
+    const heightPlane = 100;
+    const geometryPlane = new THREE.PlaneBufferGeometry(widthPlane, heightPlane);
     var materialPlane = new THREE.MeshLambertMaterial({color: 0xffff00});
     var meshPlane = new THREE.Mesh(geometryPlane, materialPlane);
     meshPlane.rotation.x = -1.5;
     meshPlane.position.set(0, 0, -20);
     scene.add(meshPlane);
 
-    //object round
+    //load .obj objects
+    const loader = new OBJLoader();
+    //round
     //out
-    const objRoundOut = new OBJLoader();
-    objRoundOut.load('objects/obj-round-out.obj', (obj) => {
-      obj.position.set(-6,0,-10);
-      obj.rotation.set(-2,0,0);
+    loader.load('objects/obj-round-out.obj', (obj) => {
       scene.add(obj);
+      //scene.children[3]
     });
-
     //in
-    const objRoundIn = new OBJLoader();
-    objRoundIn.load('objects/obj-round-in.obj', (obj) => {
-      obj.position.set(-6,0,-10);
-      obj.rotation.set(-2,0,0);
+    loader.load('objects/obj-round-in.obj', (obj) => {
       scene.add(obj);
+      //scene.children[4]
     });
-
-    //object square
+    //square
     //out
-    const objSquareOut = new OBJLoader();
-    objSquareOut.load('objects/obj-square-out.obj', (obj) => {
-      obj.position.set(0,0,-10);
-      obj.rotation.set(-2,0,0);
+    loader.load('objects/obj-square-out.obj', (obj) => {
       scene.add(obj);
+      //scene.children[5]
     });
-
     //in
-    const objSquareIn = new OBJLoader();
-    objSquareIn.load('objects/obj-square-in.obj', (obj) => {
-      obj.position.set(0,0,-10);
-      obj.rotation.set(-2,0,0);
+    loader.load('objects/obj-square-in.obj', (obj) => {
       scene.add(obj);
+      //scene.children[6]
     });
-
-    //object triangle
+    //triangle
     //out
-    const objTriangleOut = new OBJLoader();
-    objTriangleOut.load('objects/obj-triangle-out.obj', (obj) => {
-      obj.position.set(6,0,-10);
-      obj.rotation.set(-2,0,0);
+    loader.load('objects/obj-triangle-out.obj', (obj) => {
       scene.add(obj);
+      //scene.children[7]
     });
-
     //in
-    const objTriangleIn = new OBJLoader();
-    objTriangleIn.load('objects/obj-triangle-in.obj', (obj) => {
-      obj.position.set(6,0,-10);
-      obj.rotation.set(-2,0,0);
+    loader.load('objects/obj-triangle-in.obj', (obj) => {
       scene.add(obj);
+      //scene.children[8]
     });
 
+    //check .obj objects loading
+    window.addEventListener("load", function() {
+      let time = window.setInterval(check_load, 1000);
+      function check_load () {
+        console.log("loading...");
+        if (scene.children[8] !== undefined) {
+          console.log("loaded.");
+          clearInterval(time);
+          set_start_position();
+        }
+      }
+    });
+
+    //set start position
+    function set_start_position() {
+      console.log("lets start!");
+      //round
+      //out
+      scene.children[3].position.set(-1.68,0,-4);
+      scene.children[3].rotation.set(4.75,0,1);
+      //in
+      scene.children[4].position.set(0,0,-10);
+      scene.children[4].rotation.set(0,0,0);
+      //square
+      //out
+      scene.children[5].position.set(0,0,-5);
+      scene.children[5].rotation.set(4.75,0,0);
+      //in
+      scene.children[6].position.set(0,0,-10);
+      scene.children[6].rotation.set(0,0,0);
+      //triangle
+      //out
+      scene.children[7].position.set(1.68,0,-4);
+      scene.children[7].rotation.set(4.75,0,-1);
+      //in
+      scene.children[8].position.set(0,0,-10);
+      scene.children[8].rotation.set(0,0,0);
+    }
 
 
 

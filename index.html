@@ -37,17 +37,20 @@
     var scene = new THREE.Scene();
 
     //light
-    var light = new THREE.AmbientLight(0xffffff, 0.5);
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(0, 10, 0);
+    light.target.position.set(0, 0, -25);
     scene.children[0] = light;
-    var light1 = new THREE.PointLight(0xffffff, 0.5);
-    scene.children[1] = light1;
+    scene.children[1] = light.target;
 
     //create THREE objects
     //plane
     const widthPlane = 100;
     const heightPlane = 100;
     const geometryPlane = new THREE.PlaneBufferGeometry(widthPlane, heightPlane);
-    var materialPlane = new THREE.MeshLambertMaterial({color: 0xffff00});
+    var materialPlane = new THREE.MeshPhongMaterial({color: 0xffff00});
     var meshPlane = new THREE.Mesh(geometryPlane, materialPlane);
     meshPlane.rotation.x = -1.5;
     meshPlane.position.set(0, 0, -20);
@@ -59,28 +62,36 @@
     //out
     loader.load('objects/obj-round-out.obj', (obj) => {
       scene.children[3] = obj;
+      scene.children[3].children[0].material = new THREE.MeshPhongMaterial({color: 0xffffff});
     });
+
     //in
     loader.load('objects/obj-round-in.obj', (obj) => {
       scene.children[4] = obj;
+      scene.children[4].children[0].material = new THREE.MeshLambertMaterial({color: 0xffffff });
+
     });
     //square
     //out
     loader.load('objects/obj-square-out.obj', (obj) => {
       scene.children[5] = obj;
+      scene.children[5].children[0].material = new THREE.MeshPhongMaterial({color: 0xffffff});
     });
     //in
     loader.load('objects/obj-square-in.obj', (obj) => {
       scene.children[6] = obj;
+      scene.children[6].children[0].material = new THREE.MeshLambertMaterial({color: 0xffffff });
     });
     //triangle
     //out
     loader.load('objects/obj-triangle-out.obj', (obj) => {
       scene.children[7] = obj;
+      scene.children[7].children[0].material = new THREE.MeshPhongMaterial({color: 0xffffff});
     });
     //in
     loader.load('objects/obj-triangle-in.obj', (obj) => {
       scene.children[8] = obj;
+      scene.children[8].children[0].material = new THREE.MeshLambertMaterial({color: 0xffffff });
     });
 
     //check .obj objects loading
@@ -103,13 +114,8 @@
       //out
       scene.children[3].position.set(-1.68,0,-4);
       scene.children[3].rotation.set(4.75,0,1);
-      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      //мы остановились на том чтобы сделать нормальное назначение цветов и проверку в make_choice
-      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      
-      scene.children[3].children[0].material.color.r = 255;
-      scene.children[3].children[0].material.color.g = 0;
-      scene.children[3].children[0].material.color.b = 0;
+      set_color(undefined, scene.children[3]);
+
       //in
       scene.children[4].position.set(0,1.75,-4);
       scene.children[4].rotation.set(-1.5,0,0);
@@ -119,9 +125,7 @@
       //out
       scene.children[5].position.set(0,0,-5);
       scene.children[5].rotation.set(4.75,0,0);
-      scene.children[5].children[0].material.color.r = 0;
-      scene.children[5].children[0].material.color.g = 255;
-      scene.children[5].children[0].material.color.b = 0;
+      set_color(undefined, scene.children[5]);
       //in
       scene.children[6].position.set(0,1.75,-4);
       scene.children[6].rotation.set(-1.5,0,0);
@@ -131,9 +135,7 @@
       //out
       scene.children[7].position.set(1.68,0,-4);
       scene.children[7].rotation.set(4.75,0,-1);
-      scene.children[7].children[0].material.color.r = 0;
-      scene.children[7].children[0].material.color.g = 0;
-      scene.children[7].children[0].material.color.b = 255;
+      set_color(undefined, scene.children[7]);
       //in
       scene.children[8].position.set(0,1.75,-4);
       scene.children[8].rotation.set(-1.5,0,0);
@@ -146,6 +148,8 @@
 
       start_game();
     }
+
+
 
     //game----------------------------------------------------------------------------------------------------------------------------------
     var number_shape_random;
@@ -163,28 +167,53 @@
       scene.children[number_shape_random].visible = true;
 
       //get random color for random shape
-      if (number_color_random === 0) {
-        scene.children[number_shape_random].children[0].material.color.r = 255;
-        scene.children[number_shape_random].children[0].material.color.g = 0;
-        scene.children[number_shape_random].children[0].material.color.b = 0;
-        scene.children[number_shape_random].color = "red";
-      }
-      if (number_color_random === 1) {
-        scene.children[number_shape_random].children[0].material.color.r = 0;
-        scene.children[number_shape_random].children[0].material.color.g = 255;
-        scene.children[number_shape_random].children[0].material.color.b = 0;
-        scene.children[number_shape_random].color = "green";
-      }
-      if (number_color_random === 2) {
-        scene.children[number_shape_random].children[0].material.color.r = 0;
-        scene.children[number_shape_random].children[0].material.color.g = 0;
-        scene.children[number_shape_random].children[0].material.color.b = 255;
-        scene.children[number_shape_random].color = "blue";
+      set_color(undefined,scene.children[number_shape_random]);
+
+    }
+
+    //ТУТ НЕОЧЕНЬ КРАСИВЫЕ ПЕРЕМЕННЫЕ!
+    function make_choice(choice,number) {
+      if ((scene.children[number_shape_random].shape == choice)&&
+          (scene.children[number_shape_random].color == scene.children[number].color)) {
+        console.log("+");
+        start_game();
+        set_color(undefined, scene.children[3]);
+        set_color(undefined, scene.children[5]);
+        set_color(undefined, scene.children[6]);
+        temp_camera_move = 0.001;
+        temp_camera_check = "up";
+      } else {
+        console.log("-");
       }
     }
 
+    //common functions
+    function set_color(color, obj) {
+      if (color === undefined) {
+        let array_colors = ["red", "green", "blue"];
+        color = array_colors[Math.round(Math.random()*2)];
+      }
+      if (color == "red") {
+        obj.children[0].material.color.r = 255;
+        obj.children[0].material.color.g = 0.5;
+        obj.children[0].material.color.b = 0.5;
+        obj.color = "red";
+      }
+      if (color == "green") {
+        obj.children[0].material.color.r = 0.5;
+        obj.children[0].material.color.g = 255;
+        obj.children[0].material.color.b = 0.5;
+        obj.color = "green";
+      }
+      if (color == "blue") {
+        obj.children[0].material.color.r = 0.5;
+        obj.children[0].material.color.g = 0.5;
+        obj.children[0].material.color.b = 255;
+        obj.color = "blue";
+      }
+    }
 
-    function change_color(obj) {
+    function change_next_color(obj) {
       if (obj.children[0].material.color.r === 255) {
         obj.children[0].material.color.r = 0;
         obj.children[0].material.color.g = 255;
@@ -200,15 +229,6 @@
         obj.children[0].material.color.g = 0;
         obj.children[0].material.color.b = 0;
         obj.color = "red";
-      }
-    }
-
-    function make_choice(choice) {
-      if (scene.children[number_shape_random].shape == choice) {
-        console.log("+");
-        start_game();
-      } else {
-        console.log("-");
       }
     }
 
@@ -236,25 +256,15 @@
         if(x <= 500) scene.children[number_shape_random].rotation.z -= 0.1;
         if(x >= 1000) scene.children[number_shape_random].rotation.z += 0.1;
 
-        if ((x > 500)&&(x < 1000)&&(y < 266)) change_color(scene.children[number_shape_random]);
+        if ((x > 500)&&(x < 1000)&&(y < 266)) change_next_color(scene.children[number_shape_random]);
       }
 
       //choice
-      var temp_choice;
       if (camera.rotation.x <= -0.075)
       {
-        if (x <= 500) {
-          temp_choice = "round";
-          make_choice(temp_choice);
-        }
-        if ((x > 500)&&(x < 1000)) {
-          temp_choice = "square";
-          make_choice(temp_choice);
-        }
-        if (x >= 1000) {
-          temp_choice = "triangle";
-          make_choice(temp_choice);
-        }
+        if (x <= 500) make_choice("round", 3);
+        if ((x > 500)&&(x < 1000)) make_choice("square",5);
+        if (x >= 1000) make_choice("triangle",7);
       }
     });
 

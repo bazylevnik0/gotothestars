@@ -16,8 +16,27 @@
   <script src="three.js"></script>
   <script src="modules/three.module.js"></script>
   <script src="modules/OBJLoader.js"></script>
+                                                  <!--должно быть только необходимое-->
+  <script src="libs/postprocessing/Pass.js"></script>
+  <script src="libs/BloomPass.js"></script>
+  <script src="libs/EffectComposer.js"></script>
+  <script src="libs/RenderPass.js"></script>
+  <script src="libs/shaders/CopyShader.js"></script>
+  <script src="libs/postprocessing/ShaderPass.js"></script>
+  <script src="libs/postprocessing/MaskPass.js"></script>
+  <script src="libs/shaders/ConvolutionShader.js"></script>
+                                                  <!--должно быть только необходимое-->
+
+  <script src="libs/postprocessing/FilmPass.js"></script>
+  <script src="libs/shaders/FilmShader.js"></script>
+
+  <!--<script src="libs/postprocessing/FilmPass.js"></script>-->
+  <!--<script src="libs/shaders/FilmShader.js"></script>-->
+
   <script>
+    //var renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myCanvas'),antialias: true});
     var renderer = new THREE.WebGLRenderer({canvas: document.getElementById('myCanvas'),antialias: true});
+
     renderer.setClearColor(0x000000);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -69,9 +88,6 @@
     loader.load('objects/obj-round-in.obj', (obj) => {
       scene.children[4] = obj;
       scene.children[4].children[0].material = new THREE.MeshLambertMaterial({color: 0xffffff });
-
-      //scene_light.children[1] = obj;
-      //scene_light.children[1].children[0].material = new THREE.MeshPhongMaterial({color: 0xffffff, opacity: 0.5, transparent: true});
     });
     //square
     //out
@@ -130,7 +146,7 @@
         }
       }
     });
-        
+
     //set start position
     function set_start_position() {
       console.log("set_start_position()");
@@ -321,9 +337,33 @@
       }
     });
 
+    //postprocessing-------------------------------------------------------------------------------------------------------------------------
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene_light, camera));
+
+    const bloomPass = new BloomPass(
+      1,    // strength
+      25,   // kernel size
+      25,    // sigma ?
+      56,  // blur render target resolution
+    );
+    //bloomPass.renderToScreen = true;
+    composer.addPass(bloomPass);
+
+
+    const filmPass = new FilmPass(
+      0,   // noise intensity
+      0,  // scanline intensity
+      648,    // scanline count
+      false,  // grayscale
+    );
+    filmPass.renderToScreen = true;
+    composer.addPass(filmPass);
+
+
 
     //animation
-
+    var crazy = 1;
     function render() {
       //control
       //camera up & down
@@ -331,15 +371,26 @@
       if ((temp_camera_check === "up") && (camera.rotation.x >= 0.25)) temp_camera_move = 0;
       if ((temp_camera_check === "down") && (camera.rotation.x <= -0.15)) temp_camera_move = 0;
 
+
+      //renderer.clear();
+                                                      //смех и слезы
+      if (crazy == 1) { renderer.render(scene, camera); crazy = 0; }
+      else { composer.render(); crazy = 1; }
+
+      /*
+      renderer.render(composer.render(scene_light, camera));
+      renderer.autoClear = false;
       renderer.render(scene, camera);
-  	  renderer.autoClear = false;
-      renderer.render(scene_light, camera);
-  		renderer.autoClear = true;
+      renderer.autoClear = true;
+      */
+      //renderer.render(scene_light, camera);
+      //renderer.autoClear = true;
+
 
       requestAnimationFrame(render);
     }
-
-    renderer.render(scene, camera);
+    //renderer.render(scene, camera);
+    //composer.render();
 
   </script>
 </body>

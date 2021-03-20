@@ -4,18 +4,22 @@ var geometry, material, mesh;
 init();
 
 function init() {
-	
+	//set loaders
+	const loader = new OBJLoader();
+	const loader_texture = new OBJLoader();
+		
+	//scene
+	scene = new THREE.Scene();
 	//table of scene objects:
 	//[0]: light point;
 	//[1]: light ambient;
-	//[2]: obj sky;	
+	//[2]: obj sky;
+	//[3]: obj back;	
 	
-	//scene
-	scene = new THREE.Scene();
 	//camera
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
 	camera.position.set(0, 0, 5);
-		
+	
 	//light
 	//point
 	light = new THREE.PointLight( 0xffffff, 1, 8 );
@@ -34,19 +38,30 @@ function init() {
 	*/
 
 	//load .obj objects
-	const loader = new OBJLoader();
 	//sky
 	loader.load('obj/sky.obj', (obj) => {
 		scene.children[2] = obj;
-		scene.children[2].scale.set(5.25,5.25,5.25);
+		//set start position & scale
+		scene.children[2].position.set(0,0,0);
+		scene.children[2].scale.set( 5.25, 5.25, 5.25);
 	});
 	//back
 	loader.load('obj/back.obj', (obj) => {
+		obj.children[0].material.map = loader_texture.load('img/back_texture.jpg');
+		
 		scene.children[3] = obj;
-		scene.children[3].rotation.x = 0.4;
-		//scene.children[3].scale.set(5.25,5.25,5.25);
-		//scene.children[3].position.set(0,-2.5,0);
+		//set start position & scale
+		scene.children[3].scale.set( 7, 7, 7);
+		scene.children[3].position.set(0,-2.5,0);
 	});
+		//earth
+	loader.load('obj/earth/earth.obj', (obj) => {
+		scene.children[4] = obj;
+		//set start position & scale
+		scene.children[4].scale.set( 5, 5, 5);
+		scene.children[4].position.set(0,-4,0);
+	});
+	
 	
 		
 	renderer = new THREE.WebGLRenderer( { antialias: true } );

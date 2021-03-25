@@ -2,6 +2,8 @@
 var camera, scene, light, light_ambient, renderer;
 
 //set loaders
+
+//возможно без них?
 const loader = new OBJLoader();
 const loader_texture = new THREE.TextureLoader();
 	
@@ -97,12 +99,78 @@ function init() {
 	//earth
 	loader.load('obj/earth/earth.obj', (obj) => {
 		//add obj in scene
-		scene.children[4] = obj;
+		scene.children[5] = obj;
 		//set start position & scale
-		scene.children[4].scale.set( 5, 5, 5);
-		scene.children[4].position.set(0,-4.5,0);
+		scene.children[5].scale.set( 5, 5, 5);
+		scene.children[5].position.set(0,-4.5,0);
 	});
 	
+	//exp: add obj with mtl
+	const manager = new THREE.LoadingManager();
+				manager.addHandler( /\.dds$/i, new DDSLoader() );
+
+				// comment in the following line and import TGALoader if your asset uses TGA textures
+				// manager.addHandler( /\.tga$/i, new TGALoader() );
+
+				new MTLLoader( manager )
+					.setPath( 'obj/temp/' )
+					.load( 'test_uv.mtl', function ( materials ) {
+
+						materials.preload();
+
+						new OBJLoader( manager )
+							.setMaterials( materials )
+							.setPath( 'obj/temp/' )
+							.load( 'test_uv.obj', function ( object ) {
+
+								scene.children[4] = object;
+							} );
+
+					} );
+
+				//
+
+
+
+
+
+	//const manager = new THREE.LoadingManager();
+	
+	/*
+	var mat, obj;
+	const load_mat = new MTLLoader();
+	//const load_obj = new OBJLoader();
+	/*
+	load_mat.load('obj/temp/test_uv.mtl', ( material ) => {
+							      console.log(".load mat");
+							      material.preload();
+	loader.load('obj/temp/test_uv.obj', (object) => {
+		//add obj in scene
+		load_mat.load('obj/temp/test_uv.mtl', (material) => {
+						      material.preload();
+						      object.material = material;
+						      }
+		);
+	});
+	*/
+
+	
+	/*
+	new MTLLoader( manager )
+				.load('obj/temp/test_uv.mtl', ( material ) => {
+							      console.log(".load mat");
+							      material.preload();
+								
+							      new OBJLoader( manager )
+							       			     .load('obj/temp/test_uv.obj', ( object ) => {
+														   console.log(".load obj");
+														   scene.add( object );
+														   //scene.children[5] = object;
+														     );
+							      }
+				);
+	*/			 
+	//
 	
 		
 	renderer = new THREE.WebGLRenderer( { antialias: true } );

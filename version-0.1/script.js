@@ -56,8 +56,8 @@ function init() {
 
 		
 	//point light
-	light = new THREE.PointLight( 0xffffff, 1, 8 );
-	light.position.set( 0, 0, 0 );
+	light = new THREE.PointLight( 0xffffff, 1, 25 );
+	light.position.set( 0, -2.5, 0 );
 	//add point light in scene
 	scene.children[0] = light;
 	
@@ -65,11 +65,11 @@ function init() {
 	light_ambient = new THREE.AmbientLight( 0x404040 );
 	//add ambient light in scene
 	scene.children[1] = light_ambient;
-											//придумай как подгружать объект с проверкой его состояния
+
 	//sky
-	loader.load('obj/sky.obj', (obj) => {
+	loader.load('obj/sky.obj', (object) => {
 					//add obj in scene
-					scene.children[2] = obj;
+					scene.children[2] = object;
 					//set start position & scale
 					scene.children[2].position.set(0,0,0);
 					scene.children[2].scale.set( 5.25, 5.25, 5.25);
@@ -81,58 +81,41 @@ function init() {
 						     	material.preload();
 						     	loader.setMaterials( material );
 						     	loader.load('obj/back.obj', (object) => {
-																	 //сделай Pong материал 
 						     					   	object.children[0].material.color.r = 1;
 												object.children[0].material.color.g = 1;
 												object.children[0].material.color.b = 1;
 												scene.children[3] = object;
 												//set start position & scale
-												scene.children[3].scale.set( 7, 7, 7);
+												scene.children[3].scale.set( 7, 12, 7);
 												scene.children[3].position.set(0,-2.5,0);
-											    }
+										    }
 						     	);
 						     }
 	);
 	
-	
-	//loading in chaining one to one with check scene undefined
-	
-
-	/*
-	//back
-	loader.load('obj/back.obj', (obj) => {
-		scene.children[3] = obj;
-		//add obj in scene
-		//set start position & scale
-		scene.children[3].scale.set( 7, 7, 7);
-		scene.children[3].position.set(0,-2.5,0);
-	});
 	//earth
-	loader.load('obj/earth/earth.obj', (obj) => {
-		//add obj in scene
-		scene.children[4] = obj;
-			//set start position & scale
-		scene.children[4].scale.set( 5, 5, 5);
-		scene.children[4].position.set(0,-4.5,0);
+	loader.load('obj/earth/earth.obj', (object) => {
+						//add obj in scene
+						scene.children[4] = object;
+						//set start position & scale
+						scene.children[4].scale.set( 6, 6, 6);
+						scene.children[4].position.set(0,-7,0);
 	});
 	
-	//while( scene.children[4] == undefined ) console.log("loading..");
-	
-	
-	//exp: add obj with mtl
-	
-	*/
 
 		
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
-		
-	renderer.setAnimationLoop( animation );
+	let loading = setInterval( function() { 
+				 	if (scene.children[scene.children.length-1] !== undefined) { 
+						clearInterval(loading); 
+						renderer.setAnimationLoop( animation ); 
+					} 
+		      } , 1000 );
+
 }
 
 function animation( time ) {
-	
-
-  	renderer.render(scene, camera);
+	 renderer.render(scene, camera); 
 }

@@ -10,9 +10,10 @@ init();
 
 function init() {
 	//camera
-	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
-	camera.position.set(0, 0, 5);
-	
+	//camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
+	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 100 );
+	camera.position.set(0, -4, 6.75)	
+	camera.rotation.set(-0.3,0,0)
 	//scene
 	scene = new THREE.Scene();
 	
@@ -73,6 +74,11 @@ function init() {
 					//set start position & scale
 					scene.children[2].position.set(0,0,0);
 					scene.children[2].scale.set( 5.25, 5.25, 5.25);
+				  	//set color
+					object.children[0].material.color.r = 0.1;
+					object.children[0].material.color.g = 0.1;
+					object.children[0].material.color.b = 0.1;
+											
 				   }
 	);
 
@@ -81,13 +87,16 @@ function init() {
 						     	material.preload();
 						     	loader.setMaterials( material );
 						     	loader.load('obj/back.obj', (object) => {
-						     					   	object.children[0].material.color.r = 1;
-												object.children[0].material.color.g = 1;
-												object.children[0].material.color.b = 1;
-												scene.children[3] = object;
-												//set start position & scale
-												scene.children[3].scale.set( 7, 12, 7);
-												scene.children[3].position.set(0,-2.5,0);
+						     					//add obj in scene
+											scene.children[3] = object;
+											//set start position & scale
+											scene.children[3].scale.set( 7, 12, 7);
+											scene.children[3].position.set(0,-2.5,0);
+											scene.children[3].rotation.y = 2
+										    	//set color
+											object.children[0].material.color.r = 1;
+											object.children[0].material.color.g = 1;
+											object.children[0].material.color.b = 1;
 										    }
 						     	);
 						     }
@@ -98,11 +107,59 @@ function init() {
 						//add obj in scene
 						scene.children[4] = object;
 						//set start position & scale
-						scene.children[4].scale.set( 6, 6, 6);
+						scene.children[4].scale.set( 6, 4.5, 6);
 						scene.children[4].position.set(0,-7,0);
-	});
+						scene.children[4].rotation.y = -2.5;
+						//set color
+						object.children[0].material.color.r = 0.545;
+						object.children[0].material.color.g = 0.344;
+						object.children[0].material.color.b = 0.303;
+					   }
+	);
 	
+	//water
+	loader.load('obj/earth/water.obj', (object) => {
+						//add obj in scene
+						scene.children[5] = object;
+						//set start position & scale
+						scene.children[5].scale.set( 6, 4.5, 6);
+						scene.children[5].position.set(0,-7,0);
+						scene.children[5].rotation.y = -2.5;
+						//set color
+						object.children[0].material.color.r = 0.247;
+						object.children[0].material.color.g = 0.629;
+						object.children[0].material.color.b = 0.606;
+					   }
+	);
 
+		//water-step-1
+		loader.load('obj/earth/water-step-1.obj', (object) => {
+							//add obj in scene
+							scene.children[6] = object;
+							//set start position & scale
+							scene.children[6].scale.set( 6, 4.5, 6);
+							scene.children[6].position.set(0,-7.15,0);
+							scene.children[6].rotation.y = -2.5;
+							//set color
+							object.children[0].material.color.r = 1;
+							object.children[0].material.color.g = 1;
+							object.children[0].material.color.b = 1;
+						   }
+		);
+		//water-step-2
+		loader.load('obj/earth/water-step-2.obj', (object) => {
+							//add obj in scene
+							scene.children[7] = object;
+							//set start position & scale
+							scene.children[7].scale.set( 6, 4.5, 6);
+							scene.children[7].position.set(0,-7,0);
+							scene.children[7].rotation.y = -2.5;
+							//set color
+							object.children[0].material.color.r = 1;
+							object.children[0].material.color.g = 1;
+							object.children[0].material.color.b = 1;
+						   }
+		);
 		
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -116,6 +173,33 @@ function init() {
 
 }
 
+var inhale = true, exhale = false;
 function animation( time ) {
+	 //life animation
+	 if (inhale === true) {
+		//water
+		if (scene.children[5].position.y >= -7.15) scene.children[5].position.y -= 0.001;
+		else { inhale = false; exhale =  true; }
+		//water-step-1
+		if (scene.children[6].position.y <= -7.1) scene.children[6].position.y += 0.001;
+		else { inhale = false; exhale =  true; }
+		//water-step-2
+		if (scene.children[7].position.y <= -7.1) scene.children[7].position.y += 0.001;
+		else { inhale = false; exhale =  true; }
+	 }
+	 if (exhale === true) {
+		//water
+		if (scene.children[5].position.y <= -7.05) scene.children[5].position.y += 0.001;
+		else { inhale =  true; exhale = false; }
+		//water-step-1
+		if (scene.children[6].position.y >= -7.15) scene.children[6].position.y -= 0.001;
+		else { inhale =  true; exhale = false; }
+		//water-step-2
+		if (scene.children[7].position.y >= -7.15) scene.children[7].position.y -= 0.001;
+		else { inhale =  true; exhale = false; }
+	 }
+	 scene.children[3].rotation.y += 0.0005;
+										    
+	 //render	
 	 renderer.render(scene, camera); 
 }

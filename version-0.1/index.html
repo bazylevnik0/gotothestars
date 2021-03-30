@@ -7,10 +7,54 @@
       margin: 0;
       overflow: hidden;
     }
+
+    iframe#player 
+    {
+      width: 100vw;
+      height: 100vh;
+    }
   </style>
 </head>
 <body>
+<div id="box">
+	<div id="player"></div>
+</div>
 </body>
+<script>
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          videoId: 'M7lc1UVf-VE',
+          events: {
+            'onReady': onPlayerReady,
+	    'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      function onPlayerReady(event) {
+        event.target.playVideo();
+      }
+
+      var done = false;
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          setTimeout(hidePlayer, 1000);
+          done = true;
+        }
+      }
+      function hidePlayer(event) {
+      	document.getElementById("box").style.position = "absolute";
+	      document.getElementById("box").style.zIndex = -1; 
+      }
+
+</script>
 <script src="lib/three.js"></script>
 <script src="lib/three.module.js"></script>
 <script src="lib/OBJLoader.js"></script>

@@ -17,10 +17,11 @@
 </head>
 <body>
 <div id="box">
-	<div id="player"></div>
+      <div id="player"></div>
 </div>
 </body>
 <script>
+      //youtube player api
       var tag = document.createElement('script');
 
       tag.src = "https://www.youtube.com/iframe_api";
@@ -49,11 +50,11 @@
           done = true;
         }
       }
+
       function hidePlayer(event) {
       	document.getElementById("box").style.position = "absolute";
-	      document.getElementById("box").style.zIndex = -1; 
+	document.getElementById("box").style.zIndex = -1; 
       }
-
 </script>
 <script src="lib/three.js"></script>
 <script src="lib/three.module.js"></script>

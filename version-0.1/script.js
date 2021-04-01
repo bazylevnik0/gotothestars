@@ -66,7 +66,8 @@ function init() {
 	light_ambient = new THREE.AmbientLight( 0x404040 );
 	//add ambient light in scene
 	scene.children[1] = light_ambient;
-
+										//!!!напиши функцию для пересчета цветов и ввода через человеческий вид
+										//и функцию смены цвета материала
 	//sky
 	loader.load('obj/sky.obj', (object) => {
 					//set color
@@ -104,9 +105,9 @@ function init() {
 	//earth
 	loader.load('obj/earth/earth.obj', (object) => {
 						//set color
-						object.children[0].material.color.r = 0.545;
-						object.children[0].material.color.g = 0.344;
-						object.children[0].material.color.b = 0.303;
+						object.children[0].material.color.r = 0.336;
+						object.children[0].material.color.g = 0.277;
+						object.children[0].material.color.b = 0.262;
 						//add obj in scene
 						scene.children[4] = object;
 						//set start position & scale
@@ -165,10 +166,10 @@ function init() {
 		//base
 		loader.load('obj/earth/green/left/base.obj', (object) => {
 						  		  //set color
-								  object.children[0].material.color.r = 1;
-								  object.children[0].material.color.g = 1;
-								  object.children[0].material.color.b = 1;
-					  			  //add obj in scene
+								  object.children[0].material.color.r = 0.351;
+								  object.children[0].material.color.g = 0.196;
+								  object.children[0].material.color.b = 0.163
+								  //add obj in scene
 								  scene.children[8] = object;
 								  //set start position & scale
 								  scene.children[8].scale.set( 6, 4.5, 6);
@@ -180,9 +181,9 @@ function init() {
 		loader.load('obj/earth/green/left/green-1.obj', (object) => {
 						  		    //set color
 								    for ( let i = 0; i < object.children[0].material.length; i++ ) {
-									object.children[0].material[i].color.r = 1;
-								    	object.children[0].material[i].color.g = 1;
-								    	object.children[0].material[i].color.b = 1;
+									object.children[0].material[i].color.r = 0.175;
+								    	object.children[0].material[i].color.g = 0.484;
+								    	object.children[0].material[i].color.b = 0.127;
 					  			    }
 								    //add obj in scene
 								    scene.children[9] = object;
@@ -196,9 +197,9 @@ function init() {
 		loader.load('obj/earth/green/left/green-2.obj', (object) => {
 						  		    //set color
 								    for ( let i = 0; i < object.children[0].material.length; i++ ) {
-									object.children[0].material[i].color.r = 1;
-								    	object.children[0].material[i].color.g = 1;
-								    	object.children[0].material[i].color.b = 1;
+									object.children[0].material[i].color.r = 0.175;
+								    	object.children[0].material[i].color.g = 0.484;
+								    	object.children[0].material[i].color.b = 0.127;
 					  			    }
 								    //add obj in scene
 								    scene.children[10] = object;
@@ -212,9 +213,9 @@ function init() {
 		//base
 		loader.load('obj/earth/green/right-1/base.obj', (object) => {
 						  		  //set color
-								  object.children[0].material.color.r = 1;
-								  object.children[0].material.color.g = 1;
-								  object.children[0].material.color.b = 1;
+								  object.children[0].material.color.r = 0.351;
+								  object.children[0].material.color.g = 0.196;
+								  object.children[0].material.color.b = 0.163;
 					  			  //add obj in scene
 								  scene.children[11] = object;
 								  //set start position & scale
@@ -226,9 +227,9 @@ function init() {
 		//green-1
 		loader.load('obj/earth/green/right-1/green-1.obj', (object) => {
 						  		    //set color
-								    object.children[0].material.color.r = 1;
-								    object.children[0].material.color.g = 1;
-								    object.children[0].material.color.b = 1;
+								    object.children[0].material.color.r = 0.175;
+								    object.children[0].material.color.g = 0.484;
+								    object.children[0].material.color.b = 0.127;
 					  			    //add obj in scene
 								    scene.children[12] = object;
 								    //set start position & scale
@@ -237,13 +238,14 @@ function init() {
 								    scene.children[12].rotation.y = -2.5;
 								 }
 		);
+		
 		//green-2
 		loader.load('obj/earth/green/right-1/green-2.obj', (object) => {
 						  		    //set color
-								    object.children[0].material.color.r = 1;
-								    object.children[0].material.color.g = 1;
-								    object.children[0].material.color.b = 1;
-					  			    //add obj in scene
+								    object.children[0].material.color.r = 0.175;
+								    object.children[0].material.color.g = 0.484;
+								    object.children[0].material.color.b = 0.127
+								    //add obj in scene
 								    scene.children[13] = object;
 								    //set start position & scale
 								    scene.children[13].scale.set( 6, 4.5, 6);
@@ -251,7 +253,65 @@ function init() {
 								    scene.children[13].rotation.y = -2.5;
 								 }
 		);
-	
+		
+	//right-2
+		//base
+		loader.load('obj/earth/green/right-2/base.obj', (object) => {
+						  		  //set color
+								  object.children[0].material.color.r = 0.351;
+								  object.children[0].material.color.g = 0.196;
+								  object.children[0].material.color.b = 0.163;
+					  			  //add obj in scene
+								  scene.children[14] = object;
+								  //set start position & scale
+								  scene.children[14].scale.set( 6, 4.5, 6);
+								  scene.children[14].position.set( 0, -7, 0);
+								  scene.children[14].rotation.y = -2.5;
+							     }
+		);
+		//green-1
+		loader.load('obj/earth/green/right-2/green-1.obj', (object) => {
+						  		  //set color
+								  object.children[0].material.color.r = 0.175;
+								  object.children[0].material.color.g = 0.484;
+								  object.children[0].material.color.b = 0.127
+								  //add obj in scene
+								  scene.children[15] = object;
+								  //set start position & scale
+								  scene.children[15].scale.set( 6, 4.5, 6);
+								  scene.children[15].position.set( 0, -7, 0);
+								  scene.children[15].rotation.y = -2.5;
+							     }
+		);
+		//green-2
+		loader.load('obj/earth/green/right-2/green-2.obj', (object) => {
+						  		  //set color
+								  object.children[0].material.color.r = 0.175;
+								  object.children[0].material.color.g = 0.484;
+								  object.children[0].material.color.b = 0.127
+								   //add obj in scene
+								  scene.children[16] = object;
+								  //set start position & scale
+								  scene.children[16].scale.set( 6, 4.5, 6);
+								  scene.children[16].position.set( 0, -7, 0);
+								  scene.children[16].rotation.y = -2.5;
+							     }
+		);
+		//green-3
+		loader.load('obj/earth/green/right-2/green-3.obj', (object) => {
+						  		  //set color
+								  object.children[0].material.color.r = 0.175;
+								  object.children[0].material.color.g = 0.484;
+								  object.children[0].material.color.b = 0.127
+								  //add obj in scene
+								  scene.children[17] = object;
+								  //set start position & scale
+								  scene.children[17].scale.set( 6, 4.5, 6);
+								  scene.children[17].position.set( 0, -7, 0);
+								  scene.children[17].rotation.y = -2.5;
+							     }
+		);
+		
 	
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );

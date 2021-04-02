@@ -310,9 +310,28 @@ function init() {
 								  scene.children[17].position.set( 0, -7, 0);
 								  scene.children[17].rotation.y = -2.5;
 							     }
-		);
 		
-	
+		);
+	/*
+	//air
+	//cloud
+	//left-1
+	loader.load('obj/air/cloud/left-1/cloud.obj', (object) => {
+							  //set color
+							  for ( let i = 0; i < object.children[0].material.length; i++ ) {
+								object.children[0].material[i].color.r = 1;
+							    	object.children[0].material[i].color.g = 1;
+							    	object.children[0].material[i].color.b = 1;
+					  		   }
+							  //add obj in scene
+							  scene.children[18] = object;
+							  //set start position & scale
+							  scene.children[18].scale.set( 6, 4.5, 6);
+							  scene.children[18].position.set( 0, -9, 2);
+							  scene.children[18].rotation.y = -2.5;
+						     }
+	);
+	*/
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
@@ -331,12 +350,29 @@ function animation( time ) {
 	 if (inhale === true) {
 			size -= 0.01;
 			if (size > -0.5) {
+				//!!!добавь комментарии не красиво
 				scene.children[5].position.y -= 0.001;
 				scene.children[6].position.y += 0.001;
 				scene.children[7].position.y += 0.001;
 				scene.children[9].rotation.x -= 0.0005;
 				scene.children[10].rotation.x -= 0.0005;  
 				scene.children[10].rotation.z -= 0.0005;
+				//green
+					//right
+						
+						//1
+							//green-1
+							scene.children[12].rotation.x -= 0.00025;
+							//green-2
+							scene.children[13].rotation.x -= 0.00025;
+						//2
+							//green-1
+							scene.children[15].rotation.x -= 0.00025;
+							//green-2
+							scene.children[16].rotation.x -= 0.00025;
+							//green-3
+							scene.children[17].rotation.x -= 0.00025;
+				
 			} else { inhale = false; exhale =  true; }
 		
 		 }
@@ -349,6 +385,20 @@ function animation( time ) {
 				scene.children[9].rotation.x += 0.0005;
 				scene.children[10].rotation.x += 0.0005;  
 				scene.children[10].rotation.z += 0.0005;
+				//green
+					//right
+						//1
+							//green-1
+							scene.children[12].rotation.x += 0.00025;
+							//green-2
+							scene.children[13].rotation.x += 0.00025;
+						//2
+							//green-1
+							scene.children[15].rotation.x += 0.00025;
+							//green-2
+							scene.children[16].rotation.x += 0.00025;
+							//green-3
+							scene.children[17].rotation.x += 0.00025;
 			} else { inhale = true; exhale =  false; }
 		
 	}

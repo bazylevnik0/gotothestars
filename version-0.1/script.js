@@ -312,17 +312,19 @@ function init() {
 							     }
 		
 		);
-	/*
+	
 	//air
 	//cloud
 	//left-1
 	loader.load('obj/air/cloud/left-1/cloud.obj', (object) => {
+							  // ^_^
+							  object.children[0].material = new THREE.MeshPhongMaterial();
 							  //set color
 							  for ( let i = 0; i < object.children[0].material.length; i++ ) {
 								object.children[0].material[i].color.r = 1;
 							    	object.children[0].material[i].color.g = 1;
 							    	object.children[0].material[i].color.b = 1;
-					  		   }
+					  		  }	
 							  //add obj in scene
 							  scene.children[18] = object;
 							  //set start position & scale
@@ -331,7 +333,7 @@ function init() {
 							  scene.children[18].rotation.y = -2.5;
 						     }
 	);
-	*/
+	
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );

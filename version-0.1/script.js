@@ -12,7 +12,7 @@ var raycaster = new THREE.Raycaster();
 
 //logic
 var score = 0;
-var game = false;
+var process = undefined;
 var move_array = [];	
 
 	
@@ -86,11 +86,15 @@ function init() {
 											scene.children[2].scale.set( 5, 5, 5 );
 											scene.children[2].position.set( 0, -7, 0 );
 										    	scene.children[2].rotation.y = 4;
-										  	//set status changeable
+										  	//set statuses
+											//changeable
 											scene.children[2].children[1].material.changeable = 1;
 											scene.children[2].children[2].material.changeable = 1;
-											scene.children[2].children[4].material.changeable = 1;
-											scene.children[2].children[5].material.changeable = 1;
+											//form
+											scene.children[2].children[1].form = "cube";
+											scene.children[2].children[4].form = "cube";
+											scene.children[2].children[2].form = "sphere";
+											scene.children[2].children[5].form = "sphere";
 										}
 						     	);
 					     }
@@ -109,9 +113,8 @@ function init() {
 				 	} 
 					
 					//set blank color property r
-					for (let i = 0; i < scene.children[2].children.length; i++ ) {
-						scene.children[2].children[i].material.color.r = 0;
-					}
+					scene.children[2].children[1].material.color.set( 0,0,0 )
+					scene.children[2].children[2].material.color.set( 0,0,0 )
 				 } , 1000 );
 }
 
@@ -120,34 +123,20 @@ function init() {
 	function mouse_down( event ) {
 		pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-		var intersection = raycaster.intersectObject( scene.children[2], true );
-		if ( intersection.length > 0 ) {
-			if (intersection[ 0 ].object.material.changeable === 1) {
-			intersection[ 0 ].object.material.color.r = 1;
-			intersection[ 0 ].object.material.color.r = 1;
+		raycaster.setFromCamera( pointer, camera );
+		let intersection = raycaster.intersectObject( scene.children[2], true );
+		if ( intersection.length >= 0 ) {
+			if ( intersection[ 0 ].object.material.changeable === 1 ) {
+				intersection[ 0 ].object.material.color.r = Math.random();
+				intersection[ 0 ].object.material.color.g = Math.random();
+				intersection[ 0 ].object.material.color.b = Math.random();
+				choice( intersection[ 0 ].object );
 			}
-		}	
+		}
 	}	
 
 
-//logic
-	var game_object;
-	function show() {
-		//hide game objects
-		scene.children[2].children[4].visible = false;
-		scene.children[2].children[5].visible = false;
-		//set game objects to start position 
-		scene.children[2].children[4].position.set( 0.25 , 0.05 , -0.25 );
-		scene.children[2].children[5].position.set( 0.25 , 0.05 , -0.25 );
-		//collect game objects to array
-		let objects = [ scene.children[2].children[4] , scene.children[2].children[5] ];
-		//choose random game object
-		game_object = objects[ Math.round(Math.random()) ];
-		game_object.visible = true;
-		//add game object  to animation move array
-		move_array.push( [game_object, new THREE.Vector3( 0.125 , -0.25 , -0.125 ) , 0.01] );
-		return 1;
-	}
+
 	
 
 //render
@@ -172,48 +161,97 @@ function animation( time ) {
 	
 	//move
 	move();
-	//control
-	raycaster.setFromCamera( pointer, camera );
-	
+	//processing
+	processing();
+
 	//render	
 	renderer.render(scene, camera); 
 }
 
-function move() {
-	//move_array.push( [game_object, new THREE.Vector3( 0, 0, 0 ) , 0.01] );
-	if ( move_array.length > 0 ) {
-		for ( let i = 0; i < move_array.length; i++ ) {
-			//check: it is object? 
-			if ( move_array[i][0] !== undefined ) {
-				let temp = move_array[i][0];
-				//transform to obj
-				temp.move = {};
-				temp.move.destination = move_array[i][1];
-				temp.move.step = move_array[i][2];
-				temp.move.way = temp.position.distanceTo(temp.move.destination); 
-				move_array[i] = temp;
-			} else {
-				let temp = move_array[i];
-				//check: obj in the end way?
-				if ( temp.move.way >= temp.move.step * 2 ) {
-					//move obj
-					//x
-					if ( temp.position.x > temp.move.destination.x ) temp.position.x -= temp.move.step;
-					if ( temp.position.x < temp.move.destination.x ) temp.position.x += temp.move.step;
-					//y
-					if ( temp.position.y > temp.move.destination.y ) temp.position.y -= temp.move.step;
-					if ( temp.position.y < temp.move.destination.y ) temp.position.y += temp.move.step;
-					//z
-					if ( temp.position.z > temp.move.destination.z ) temp.position.z -= temp.move.step;
-					if ( temp.position.z < temp.move.destination.z ) temp.position.z += temp.move.step;
-					//recount way
+//logic
+	var game_object;
+	function show () {
+		//hide game objects
+		scene.children[2].children[4].visible = false;
+		scene.children[2].children[5].visible = false;
+		//set game objects to start position 
+		scene.children[2].children[4].position.set( 0.25 , 0.05 , -0.25 );
+		scene.children[2].children[5].position.set( 0.25 , 0.05 , -0.25 );
+		//collect game objects to array
+		let objects = [ scene.children[2].children[4] , scene.children[2].children[5] ];
+		//choose random game object
+		game_object = objects[ Math.round(Math.random()) ];
+		game_object.visible = true;
+		//add game object  to animation move array
+		move_array.push( [game_object, new THREE.Vector3( 0.125 , -0.25 , -0.125 ) , 0.01] );
+	}
+
+	function choice ( select ) {
+		if ( game_object.form === select.form ) {
+			++score;
+			game_object.position.set( 0.4 , -0.4 , -0.4 );
+			if ( select.form === "cube") {
+				move_array.push( [game_object, new THREE.Vector3( 0.65 , -0.7 , -0.2 ) , 0.01] );
+			}
+			if ( select.form === "sphere") {
+				move_array.push( [game_object, new THREE.Vector3( -0.1 , -0.8 , -0.8 ) , 0.01] );
+			}
+		} else {
+			--score;
+		}
+		console.log(score);
+	}
+
+	function move () {
+		if ( move_array.length > 0 ) {
+			for ( let i = 0; i < move_array.length; i++ ) {
+				//check: it is object? 
+				if ( move_array[i][0] !== undefined ) {
+					let temp = move_array[i][0];
+					//transform to obj
+					temp.move = {};
+					temp.move.destination = move_array[i][1];
+					temp.move.step = move_array[i][2];
 					temp.move.way = temp.position.distanceTo(temp.move.destination); 
 					move_array[i] = temp;
 				} else {
-					//delete obj
-					move_array.splice( i , i + 1 );
+					let temp = move_array[i];
+					//check: obj in the end way?
+					if ( temp.move.way >= temp.move.step * 2 ) {
+						//move obj
+						//x
+						if ( temp.position.x > temp.move.destination.x ) temp.position.x -= temp.move.step;
+						if ( temp.position.x < temp.move.destination.x ) temp.position.x += temp.move.step;
+						//y
+						if ( temp.position.y > temp.move.destination.y ) temp.position.y -= temp.move.step;
+						if ( temp.position.y < temp.move.destination.y ) temp.position.y += temp.move.step;
+						//z
+						if ( temp.position.z > temp.move.destination.z ) temp.position.z -= temp.move.step;
+						if ( temp.position.z < temp.move.destination.z ) temp.position.z += temp.move.step;
+						//recount way
+						temp.move.way = temp.position.distanceTo(temp.move.destination); 
+						move_array[i] = temp;
+					} else {
+						//delete obj
+						move_array.splice( i , i + 1 );
+					}
 				}
-			}
-		}	
+			}	
+		}
 	}
-}
+
+	function processing () {
+		if (process = "intro") {
+
+		}
+		if (process = "nav") {
+
+		}
+		if (process = "game") {
+
+		}
+		if (process = "exit") {
+
+		}
+
+	}

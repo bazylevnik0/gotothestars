@@ -11,7 +11,7 @@ const loader_texture = new THREE.TextureLoader();
 //load
 const video = document.getElementById( 'video' );
 const texture_video = new THREE.VideoTexture( video );
-const map_glow = loader_texture.load( "../src/images/glow.png" );
+const map_glow = loader_texture.load( "./src/images/glow.png" );
 //const material_glow = new THREE.SpriteMaterial( { map: map_glow, color: 0xffffff, fog: true  , transparent: true, blending: THREE.AdditiveBlending } );
 
 

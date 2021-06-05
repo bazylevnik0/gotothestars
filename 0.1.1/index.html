@@ -41,7 +41,7 @@
       var player;
       function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-          videoId: 'M7lc1UVf-VE',
+          videoId: 'GLg4XPTy7HA',
           events: {
             'onReady': onPlayerReady,
 	    'onStateChange': onPlayerStateChange
@@ -56,7 +56,7 @@
       var done = false;
       function onPlayerStateChange(event) {
         if (event.data == YT.PlayerState.PLAYING && !done) {
-          setTimeout(hidePlayer, 1000);
+          setTimeout(hidePlayer, 7000);
           done = true;
         }
       }
